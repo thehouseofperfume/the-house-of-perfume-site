@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="it" class="no-js">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="apple-touch-icon" href="favicon.png">
+
+  <title>The House of Perfume</title>
+  <meta name="description" content="Profumeria artistica. Eleganza, carattere, firma." />
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <script src="js/cart.js" defer></script>
+
+  <!-- Language switch minimal styling (non rompe il CSS esistente) -->
+  <style>
+    .lang-switch{
+      display:flex;
+      gap:8px;
+      align-items:center;
+      justify-content:flex-end;
+      margin-left:14px;
+    }
+    .lang-btn{
+      border:1px solid rgba(255,255,255,.18);
+      background:transparent;
+      color:inherit;
+      padding:8px 10px;
+      border-radius:999px;
+      cursor:pointer;
+      font-size:12px;
+      letter-spacing:.08em;
+      line-height:1;
+      opacity:.85;
+    }
+    .lang-btn.is-active{
+      border-color: rgba(191,163,106,.9);
+      opacity:1;
+    }
+    @media (max-width: 880px){
+      .lang-switch{ justify-content:flex-start; margin-left:0; margin-top:10px; }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="index.html" aria-label="The House of Perfume">
+        <span class="brand-mark">THP</span>
+        <span class="brand-name">The House of Perfume</span>
+      </a>
+
+      <nav class="nav">
+        <a href="index.html" class="nav-link"><span data-i18n="nav_home">Home</span></a>
+        <a href="chi-siamo.html" class="nav-link"><span data-i18n="nav_about">Chi Siamo</span></a>
+        <a href="profumi.html" class="nav-link"><span data-i18n="nav_perfumes">Profumi</span></a>
+        <a href="faq.html" class="nav-link"><span data-i18n="nav_faq">FAQ</span></a>
+        <a href="contatti.html" class="nav-link"><span data-i18n="nav_contacts">Contatti</span></a>
+        <a href="login.html" class="nav-link"><span data-i18n="nav_login">Login</span></a>
+
+        <a href="checkout.html" class="nav-link nav-cta" id="navCartLink">
+          <span data-i18n="nav_cart">Carrello</span><span id="cartCount"></span>
+        </a>
+      </nav>
+
+      <!-- Switch lingua -->
+      <div class="lang-switch" aria-label="Selettore lingua">
+        <button type="button" class="lang-btn" data-lang="it">IT</button>
+        <button type="button" class="lang-btn" data-lang="fr">FR</button>
+        <button type="button" class="lang-btn" data-lang="de">DE</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- HERO UOMO -->
+    <section class="home-split" aria-label="Selezione Uomo">
+      <div class="home-split__img">
+        <img src="assets/img/home/hero-uomo.png" alt="Profumi da uomo">
+      </div>
+      <div class="home-text">
+        <h2 data-i18n="men_title">Fragranze Uomo</h2>
+        <p data-i18n="men_p1">
+          Note profonde, strutturate, talvolta scure. Profumi che nascono da resine,
+          legni caldi, spezie e accordi aromatici capaci di lasciare una traccia netta,
+          riconoscibile, mai urlata.
+        </p>
+        <p data-i18n="men_p2">
+          Ogni fragranza maschile è pensata come una firma olfattiva:
+          essenziale, decisa, elegante. Non segue le mode, le attraversa.
+        </p>
+      </div>
+    </section>
+
+    <!-- HERO DONNA -->
+    <section class="home-split" aria-label="Selezione Donna">
+      <div class="home-split__img">
+        <img src="assets/img/home/hero-donna.png" alt="Profumi da donna">
+      </div>
+      <div class="home-text">
+        <h2 data-i18n="women_title">Fragranze Donna</h2>
+        <p data-i18n="women_p1">
+          Luminose, avvolgenti, sensuali. Le fragranze femminili raccontano
+          sfumature floreali, accenti gourmand, contrasti morbidi e inattesi.
+        </p>
+        <p data-i18n="women_p2">
+          Profumi che non definiscono, ma suggeriscono. Che accompagnano la pelle
+          con eleganza naturale, lasciando una presenza sottile, persistente,
+          profondamente personale.
+        </p>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-inner">
+      <div class="footer-brand">
+        <div class="brand-mark sm">THP</div>
+        <div>
+          <a class="footer-title footer-home" href="index.html">The House of Perfume</a>
+          <div class="footer-sub" data-i18n="footer_sub">Profumeria artistica</div>
+        </div>
+      </div>
+
+      <div class="footer-social">
+        <a href="social.html" aria-label="Instagram">
+          <img src="assets/img/icons/instagram.png" alt="Instagram" class="footer-icon">
+        </a>
+        <a href="social.html" aria-label="Facebook">
+          <img src="assets/img/icons/facebook.png" alt="Facebook" class="footer-icon">
+        </a>
+        <a href="social.html" aria-label="TikTok">
+          <img src="assets/img/icons/tiktok.png" alt="TikTok" class="footer-icon">
+        </a>
+      </div>
+
+      <div class="footer-payments" aria-label="Metodi di pagamento">
+        <span class="pay-badge">
+          <img src="assets/img/icons/paypal.png" alt="PayPal" class="footer-icon">
+        </span>
+        <span class="pay-badge">
+          <img src="assets/img/icons/visa.png" alt="Visa" class="footer-icon">
+        </span>
+        <span class="pay-badge">
+          <img src="assets/img/icons/mastercard.png" alt="Mastercard" class="footer-icon">
+        </span>
+        <span class="pay-badge">
+          <img src="assets/img/icons/bonifico.png" alt="Bonifico" class="footer-icon">
+        </span>
+      </div>
+
+      <div class="footer-note">
+        © <span id="year"></span> The House of Perfume. <span data-i18n="footer_rights">Tutti i diritti riservati.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+  <script>document.getElementById("year").textContent = new Date().getFullYear();</script>
+
+  <!-- MENU ACTIVE (tuo script: invariato) -->
+  <script>
+  (function () {
+    const file = (p) => (p || "").split("/").pop().split("?")[0].split("#")[0];
+
+    // Pagina corrente (con Live Server spesso è "/" per la home)
+    let current = file(window.location.pathname);
+    if (!current) current = "index.html";
+
+    // Tutti i link del menu
+    const navLinks = document.querySelectorAll("nav .nav-link");
+
+    navLinks.forEach((a) => {
+      const hrefFile = file(a.getAttribute("href"));
+
+      // Se è un link interno tipo "#collezione", non lo tocchiamo
+      if (!hrefFile || hrefFile.startsWith("#")) return;
+
+      a.classList.toggle("is-active", hrefFile === current);
+    });
+  })();
+  </script>
+
+  <script src="assets/js/cart.js"></script>
+  <script src="assets/js/i18n.js"></script>
+
+  <script>
+    document.documentElement.classList.remove('no-js');
+  </script>
+
+  <!-- IntersectionObserver (tuo script: invariato) -->
+  <script>
+  (function () {
+    const sections = document.querySelectorAll('.home-split');
+    if (!sections.length) return;
+
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-inview');
+        } else {
+          entry.target.classList.remove('is-inview');
+        }
+      });
+    }, {
+      threshold: 0.35,
+      rootMargin: "0px 0px -10% 0px"
+    });
+
+    sections.forEach(section => io.observe(section));
+  })();
+  </script>
+
+</body>
+</html>

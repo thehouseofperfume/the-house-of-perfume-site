@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="apple-touch-icon" href="favicon.png">
+
+  <title>Login — The House of Perfume</title>
+  <meta name="description" content="Accedi al tuo account — The House of Perfume." />
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <script src="assets/js/cart.js" defer></script>
+
+  <!-- Language switch minimal styling (coerente con index) -->
+  <style>
+    .lang-switch{
+      display:flex;
+      gap:8px;
+      align-items:center;
+      justify-content:flex-end;
+      margin-left:14px;
+    }
+    .lang-btn{
+      border:1px solid rgba(255,255,255,.18);
+      background:transparent;
+      color:inherit;
+      padding:8px 10px;
+      border-radius:999px;
+      cursor:pointer;
+      font-size:12px;
+      letter-spacing:.08em;
+      line-height:1;
+      opacity:.85;
+    }
+    .lang-btn.is-active{
+      border-color: rgba(191,163,106,.9);
+      opacity:1;
+    }
+    @media (max-width: 880px){
+      .lang-switch{ justify-content:flex-start; margin-left:0; margin-top:10px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="index.html" aria-label="The House of Perfume">
+        <span class="brand-mark">THP</span>
+        <span class="brand-name">The House of Perfume</span>
+      </a>
+
+      <nav class="nav">
+        <a href="index.html" class="nav-link"><span data-i18n="nav_home">Home</span></a>
+        <a href="chi-siamo.html" class="nav-link"><span data-i18n="nav_about">Chi Siamo</span></a>
+        <a href="profumi.html" class="nav-link"><span data-i18n="nav_perfumes">Profumi</span></a>
+        <a href="faq.html" class="nav-link"><span data-i18n="nav_faq">FAQ</span></a>
+        <a href="contatti.html" class="nav-link"><span data-i18n="nav_contacts">Contatti</span></a>
+        <a href="login.html" class="nav-link"><span data-i18n="nav_login">Login</span></a>
+
+        <a href="checkout.html" class="nav-link nav-cta" id="navCartLink">
+          <span data-i18n="nav_cart">Carrello</span><span id="cartCount"></span>
+        </a>
+      </nav>
+
+      <!-- Switch lingua -->
+      <div class="lang-switch" aria-label="Selettore lingua">
+        <button type="button" class="lang-btn" data-lang="it">IT</button>
+        <button type="button" class="lang-btn" data-lang="fr">FR</button>
+        <button type="button" class="lang-btn" data-lang="de">DE</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 data-i18n="login_title">Area Cliente</h2>
+        <p data-i18n="login_intro">Accedi per gestire il tuo profilo e velocizzare il checkout.</p>
+      </div>
+
+      <div class="auth">
+        <!-- SINISTRA: LOGIN -->
+        <section class="panel">
+          <h3 style="margin:0 0 10px;" data-i18n="login_box_title">Accedi</h3>
+          <p class="muted-note" style="margin-top:0;" data-i18n="login_note">
+            La sessione viene salvata sul tuo dispositivo per mantenere l’accesso attivo.
+          </p>
+
+          <form id="loginForm">
+            <label class="field-label" for="email" data-i18n="login_label_email">Email</label>
+            <input class="field" id="email" name="email" type="email" placeholder="nome@email.com" autocomplete="email" required data-i18n="login_email_ph" />
+
+            <label class="field-label" for="password" data-i18n="login_label_password">Password</label>
+            <input class="field" id="password" name="password" type="password" placeholder="••••••••" autocomplete="current-password" required data-i18n="login_password_ph" />
+
+            <div class="row-inline">
+              <label class="check">
+                <input type="checkbox" id="remember" checked />
+                <span data-i18n="login_remember">Resta connesso</span>
+              </label>
+
+              <button class="link" type="button" id="forgotBtn" data-i18n="login_forgot">Password dimenticata?</button>
+            </div>
+
+            <button class="btn btn-primary btn-full" type="submit" data-i18n="login_btn">Accedi</button>
+
+            <div class="muted-note" id="loginMsg" style="margin-top:10px;"></div>
+          </form>
+        </section>
+
+        <!-- DESTRA: PROFILO / STATO -->
+        <aside class="panel">
+          <div id="loggedOut">
+            <h3 style="margin:0 0 10px;" data-i18n="login_benefits_title">Vantaggi</h3>
+            <ul class="list">
+              <li data-i18n="login_benefit_1">Salva indirizzi di spedizione</li>
+              <li data-i18n="login_benefit_2">Rivedi i tuoi ordini</li>
+              <li data-i18n="login_benefit_3">Checkout più rapido</li>
+            </ul>
+
+            <div style="margin-top:14px; padding-top:14px; border-top:1px solid rgba(255,255,255,.10);">
+              <h3 data-i18n="login_no_account_title">Non hai un account?</h3>
+              <p data-i18n="login_no_account_text">Puoi creare un account in pochi passaggi.</p>
+
+              <div style="margin-top:12px;">
+                <a href="registrazione.html" class="btn btn-primary" data-i18n="login_create_account">Crea account</a>
+              </div>
+            </div>
+          </div>
+
+          <div id="loggedIn" style="display:none;">
+            <h3 style="margin:0 0 8px;" data-i18n="login_connected_title">Sei connesso</h3>
+            <div class="profile-card">
+              <div class="avatar" aria-hidden="true">THP</div>
+              <div>
+                <div class="profile-name" id="profileName">Cliente</div>
+                <div class="profile-email" id="profileEmail"></div>
+              </div>
+            </div>
+
+            <div class="muted-note" style="margin-top:10px;" data-i18n="login_connected_note">
+              Sessione salvata sul dispositivo. Puoi fare logout quando vuoi.
+            </div>
+
+            <div class="profile-actions">
+              <a class="btn" href="checkout.html" data-i18n="login_go_cart">Vai al carrello</a>
+              <button class="btn btn-ghost" type="button" id="logoutBtn" data-i18n="login_logout">Logout</button>
+            </div>
+
+            <div class="panel" style="margin-top:14px;">
+              <h3 style="margin:0 0 8px;" data-i18n="login_profile_title">Il tuo profilo</h3>
+              <ul class="list">
+                <li data-i18n="login_profile_addr">Indirizzo: non impostato</li>
+                <li data-i18n="login_profile_fav">Preferiti: 0</li>
+                <li data-i18n="login_profile_orders">Ordini: 0</li>
+              </ul>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-inner">
+      <div class="footer-brand">
+        <div class="brand-mark sm">THP</div>
+        <div>
+          <a class="footer-title footer-home" href="index.html">The House of Perfume</a>
+          <div class="footer-sub" data-i18n="footer_sub">Profumeria artistica</div>
+        </div>
+      </div>
+
+      <div class="footer-social">
+        <a href="social.html" aria-label="Instagram">
+          <img src="assets/img/icons/instagram.png" alt="Instagram" class="footer-icon">
+        </a>
+        <a href="social.html" aria-label="Facebook">
+          <img src="assets/img/icons/facebook.png" alt="Facebook" class="footer-icon">
+        </a>
+        <a href="social.html" aria-label="TikTok">
+          <img src="assets/img/icons/tiktok.png" alt="TikTok" class="footer-icon">
+        </a>
+      </div>
+
+      <div class="footer-payments" aria-label="Metodi di pagamento">
+        <span class="pay-badge">
+          <img src="assets/img/icons/paypal.png" alt="PayPal" class="footer-icon">
+        </span>
+        <span class="pay-badge">
+          <img src="assets/img/icons/visa.png" alt="Visa" class="footer-icon">
+        </span>
+        <span class="pay-badge">
+          <img src="assets/img/icons/mastercard.png" alt="Mastercard" class="footer-icon">
+        </span>
+        <span class="pay-badge">
+          <img src="assets/img/icons/bonifico.png" alt="Bonifico" class="footer-icon">
+        </span>
+      </div>
+
+      <div class="footer-note">
+        © <span id="year"></span> The House of Perfume. <span data-i18n="footer_rights">Tutti i diritti riservati.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    const USER_KEY = "thp_user_v1";
+
+    const loginForm = document.getElementById("loginForm");
+    const loginMsg = document.getElementById("loginMsg");
+    const forgotBtn = document.getElementById("forgotBtn");
+
+    const loggedOut = document.getElementById("loggedOut");
+    const loggedIn = document.getElementById("loggedIn");
+
+    const profileEmail = document.getElementById("profileEmail");
+    const profileName = document.getElementById("profileName");
+    const logoutBtn = document.getElementById("logoutBtn");
+
+    function loadUser(){
+      try{
+        const raw = localStorage.getItem(USER_KEY);
+        if(!raw) return null;
+        return JSON.parse(raw);
+      } catch {
+        return null;
+      }
+    }
+
+    function saveUser(user){
+      localStorage.setItem(USER_KEY, JSON.stringify(user));
+    }
+
+    function clearUser(){
+      localStorage.removeItem(USER_KEY);
+    }
+
+    function showLoggedIn(user){
+      loggedOut.style.display = "none";
+      loggedIn.style.display = "block";
+      profileEmail.textContent = user.email || "";
+      profileName.textContent = user.name || "Cliente";
+    }
+
+    function showLoggedOut(){
+      loggedIn.style.display = "none";
+      loggedOut.style.display = "block";
+      profileEmail.textContent = "";
+      profileName.textContent = "Cliente";
+    }
+
+    // init
+    const existing = loadUser();
+    if(existing) showLoggedIn(existing);
+    else showLoggedOut();
+
+    loginForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      loginMsg.textContent = "";
+
+      const email = (document.getElementById("email").value || "").trim();
+      const password = (document.getElementById("password").value || "").trim();
+      const remember = document.getElementById("remember").checked;
+
+      if(!email || !password){
+        loginMsg.textContent = "Inserisci email e password.";
+        return;
+      }
+
+      // Per ora: login locale (salvataggio sessione sul dispositivo)
+      const user = {
+        email,
+        name: email.split("@")[0] || "Cliente"
+      };
+
+      if(remember){
+        saveUser(user);
+        sessionStorage.removeItem(USER_KEY);
+      } else {
+        sessionStorage.setItem(USER_KEY, JSON.stringify(user));
+        clearUser();
+      }
+
+      loginMsg.textContent = "Accesso effettuato.";
+      showLoggedIn(user);
+
+      loginForm.reset();
+      document.getElementById("remember").checked = true;
+    });
+
+    forgotBtn.addEventListener("click", () => {
+      alert("Recupero password: funzione in arrivo.");
+    });
+
+    logoutBtn.addEventListener("click", () => {
+      clearUser();
+      sessionStorage.removeItem(USER_KEY);
+      showLoggedOut();
+      alert("Logout effettuato.");
+    });
+
+    // supporto sessionStorage (se 'resta connesso' non era attivo)
+    if(!existing){
+      try{
+        const sraw = sessionStorage.getItem(USER_KEY);
+        if(sraw){
+          const su = JSON.parse(sraw);
+          showLoggedIn(su);
+        }
+      } catch {}
+    }
+  </script>
+
+  <!-- Menu active -->
+  <script>
+  (function () {
+    const file = (p) => (p || "").split("/").pop().split("?")[0].split("#")[0];
+    let current = file(window.location.pathname);
+    if (!current) current = "index.html";
+
+    const navLinks = document.querySelectorAll("nav .nav-link");
+    navLinks.forEach((a) => {
+      const hrefFile = file(a.getAttribute("href"));
+      if (!hrefFile || hrefFile.startsWith("#")) return;
+      a.classList.toggle("is-active", hrefFile === current);
+    });
+  })();
+  </script>
+
+    <script src="assets/js/i18n.js"></script>
+</body>
+</html>

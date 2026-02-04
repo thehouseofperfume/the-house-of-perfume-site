@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="apple-touch-icon" href="favicon.png">
+
+  <title>Carrello — The House of Perfume</title>
+  <meta name="description" content="Carrello e checkout — The House of Perfume." />
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <script src="js/cart.js" defer></script>
+
+  <!-- Language switch minimal styling (coerente con index) -->
+  <style>
+    .lang-switch{
+      display:flex;
+      gap:8px;
+      align-items:center;
+      justify-content:flex-end;
+      margin-left:14px;
+    }
+    .lang-btn{
+      border:1px solid rgba(255,255,255,.18);
+      background:transparent;
+      color:inherit;
+      padding:8px 10px;
+      border-radius:999px;
+      cursor:pointer;
+      font-size:12px;
+      letter-spacing:.08em;
+      line-height:1;
+      opacity:.85;
+    }
+    .lang-btn.is-active{
+      border-color: rgba(191,163,106,.9);
+      opacity:1;
+    }
+    @media (max-width: 880px){
+      .lang-switch{ justify-content:flex-start; margin-left:0; margin-top:10px; }
+    }
+  </style>
+
+  <style>
+    /* Popup (identico a Contatti) */
+    #toast{
+      position: fixed;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 99999;
+
+      background: rgba(18,20,28,.98);
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: 16px;
+      box-shadow: 0 20px 50px rgba(0,0,0,.55);
+
+      width: 320px;
+      padding: 12px 14px;
+
+      height: auto;
+      min-height: 0;
+      max-height: none;
+
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .25s ease;
+    }
+
+    #toast.is-show{
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    #toast .toast-inner{
+      margin: 0;
+      padding: 0;
+    }
+
+    #toast #toastTitle{
+      display: block;
+      margin: 0 0 6px;
+      font-size: 14px;
+      line-height: 1.2;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    #toast #toastText{
+      display: block;
+      margin: 0 0 10px;
+      font-size: 13px;
+      line-height: 1.35;
+      color: var(--muted);
+    }
+
+    #toast .toast-actions{
+      margin-top: 4px;
+      display:flex;
+      justify-content:flex-end;
+    }
+
+    #toast .toast-actions .btn{
+      padding: 8px 14px;
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="index.html" aria-label="The House of Perfume">
+        <span class="brand-mark">THP</span>
+        <span class="brand-name">The House of Perfume</span>
+      </a>
+
+      <nav class="nav">
+        <a href="index.html" class="nav-link"><span data-i18n="nav_home">Home</span></a>
+        <a href="chi-siamo.html" class="nav-link"><span data-i18n="nav_about">Chi Siamo</span></a>
+        <a href="profumi.html" class="nav-link"><span data-i18n="nav_perfumes">Profumi</span></a>
+        <a href="faq.html" class="nav-link"><span data-i18n="nav_faq">FAQ</span></a>
+        <a href="contatti.html" class="nav-link"><span data-i18n="nav_contacts">Contatti</span></a>
+        <a href="login.html" class="nav-link"><span data-i18n="nav_login">Login</span></a>
+
+        <a href="checkout.html" class="nav-link nav-cta" id="navCartLink">
+          <span data-i18n="nav_cart">Carrello</span><span id="cartCount"></span>
+        </a>
+      </nav>
+
+      <!-- Switch lingua -->
+      <div class="lang-switch" aria-label="Selettore lingua">
+        <button type="button" class="lang-btn" data-lang="it">IT</button>
+        <button type="button" class="lang-btn" data-lang="fr">FR</button>
+        <button type="button" class="lang-btn" data-lang="de">DE</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 data-i18n="checkout_title">Carrello</h2>
+        <p data-i18n="checkout_sub">Riepilogo ordine e checkout.</p>
+      </div>
+
+      <div class="checkout">
+        <!-- SINISTRA: RIGHE CARRELLO -->
+        <section class="panel">
+          <div class="cart-head">
+            <h3 style="margin:0;" data-i18n="checkout_items_title">Articoli</h3>
+            <span class="muted" data-i18n="checkout_ship_hint">Spedizione tracciata 24/48h</span>
+          </div>
+
+          <!-- IMPORTANTISSIMO: questo ID deve esistere -->
+          <div class="cart-list" id="cartList">
+            <!-- popolato via JS -->
+          </div>
+
+          <div class="cart-actions">
+            <a class="btn" href="profumi.html" data-i18n="checkout_continue">← Continua lo shopping</a>
+            <button class="btn btn-ghost" type="button" id="clearCart" data-i18n="checkout_clear">Svuota carrello</button>
+          </div>
+
+          <p class="muted-note" data-i18n="checkout_tip">
+            Suggerimento: aggiungi un profumo dal catalogo per iniziare.
+          </p>
+        </section>
+
+        <!-- DESTRA: RIEPILOGO + CHECKOUT -->
+        <aside class="panel">
+          <h3 style="margin:0 0 10px;" data-i18n="checkout_summary_title">Riepilogo</h3>
+
+          <div class="summary">
+            <div class="row">
+              <span class="muted" data-i18n="checkout_subtotal_label">Subtotale</span>
+              <span id="subtotal">0,00 €</span>
+            </div>
+
+            <div class="row">
+              <span class="muted" data-i18n="checkout_shipping_label">Spedizione</span>
+              <span id="shipping">0</span>
+            </div>
+
+            <div class="row total">
+              <span data-i18n="checkout_total_label">Totale</span>
+              <span id="total">0,00 €</span>
+            </div>
+          </div>
+
+          <div class="shipbox">
+            <div class="muted" style="margin-bottom:8px;" data-i18n="checkout_ship_method">Metodo di spedizione</div>
+            <label class="radio">
+              <input type="radio" name="ship" value="0" checked />
+              <span data-i18n="checkout_ship_standard">Standard (2-3 giorni) - Gratis</span>
+            </label>
+            <label class="radio">
+              <input type="radio" name="ship" value="6" />
+              <span data-i18n="checkout_ship_express">Express (24/48h) - € 6</span>
+            </label>
+          </div>
+
+          <button class="btn btn-primary btn-full" type="button" id="checkoutBtn" data-i18n="checkout_btn">
+            Procedi al checkout
+          </button>
+
+          <div class="muted-note" style="margin-top:10px;" data-i18n="checkout_payments_note">
+            Pagamenti accettati: PayPal · Visa · Mastercard · Bonifico
+          </div>
+        </aside>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-inner">
+      <div class="footer-brand">
+        <div class="brand-mark sm">THP</div>
+        <div>
+          <a class="footer-title footer-home" href="index.html">The House of Perfume</a>
+          <div class="footer-sub" data-i18n="footer_sub">Profumeria artistica</div>
+        </div>
+      </div>
+
+      <div class="footer-social">
+        <a href="social.html" aria-label="Instagram">
+          <img src="assets/img/icons/instagram.png" alt="Instagram" class="footer-icon">
+        </a>
+        <a href="social.html" aria-label="Facebook">
+          <img src="assets/img/icons/facebook.png" alt="Facebook" class="footer-icon">
+        </a>
+        <a href="social.html" aria-label="TikTok">
+          <img src="assets/img/icons/tiktok.png" alt="TikTok" class="footer-icon">
+        </a>
+      </div>
+
+      <div class="footer-payments" aria-label="Metodi di pagamento">
+        <span class="pay-badge">
+          <img src="assets/img/icons/paypal.png" alt="PayPal" class="footer-icon">
+        </span>
+        <span class="pay-badge">
+          <img src="assets/img/icons/visa.png" alt="Visa" class="footer-icon">
+        </span>
+        <span class="pay-badge">
+          <img src="assets/img/icons/mastercard.png" alt="Mastercard" class="footer-icon">
+        </span>
+        <span class="pay-badge">
+          <img src="assets/img/icons/bonifico.png" alt="Bonifico" class="footer-icon">
+        </span>
+      </div>
+
+      <div class="footer-note">
+        © <span id="year"></span> The House of Perfume. <span data-i18n="footer_rights">Tutti i diritti riservati.</span>
+      </div>
+    </div>
+  </footer>
+  
+    <!-- ✅ Popup checkout (grafico, come Contatti) -->
+  <div id="toast" role="dialog" aria-modal="true" aria-labelledby="toastTitle" aria-describedby="toastText">
+    <div class="toast-inner">
+      <strong id="toastTitle" data-i18n="checkout_toast_title">Checkout non disponibile</strong>
+      <span id="toastText" data-i18n="checkout_toast_text">Pagamento non attivo in questa versione. Il checkout verrà collegato in una fase successiva.</span>
+
+      <div class="toast-actions">
+        <button id="toastOk" type="button" class="btn btn-primary" data-i18n="toast_ok">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 1) JS carrello UNICO per tutto il sito -->
+  <script src="assets/js/cart.js"></script>
+
+  <!-- 2) Extra checkout: spedizione + svuota + pulsante checkout -->
+  <script>
+    // Anno footer (se cart.js lo fa già, questo non dà fastidio)
+    const y = document.getElementById("year");
+    if (y) y.textContent = new Date().getFullYear();
+
+    // Spedizione: aggiorna #shipping e poi forza ricalcolo totale
+    function updateShippingFromRadio(){
+      const checked = document.querySelector('input[name="ship"]:checked');
+      const ship = checked ? Number(checked.value || 0) : 0;
+      const shipEl = document.getElementById("shipping");
+      if (shipEl) shipEl.textContent = String(ship);
+      // questa funzione è globale perché cart.js NON è un modulo
+      if (typeof renderCheckoutIfPresent === "function") renderCheckoutIfPresent();
+    }
+
+    document.querySelectorAll('input[name="ship"]').forEach(r => {
+      r.addEventListener("change", updateShippingFromRadio);
+    });
+    updateShippingFromRadio();
+
+    // Svuota carrello (usa la stessa chiave di cart.js)
+    const clearBtn = document.getElementById("clearCart");
+    if (clearBtn) {
+      clearBtn.addEventListener("click", () => {
+        localStorage.setItem("thp_cart_v1", JSON.stringify({}));
+        if (typeof setCartCountUI === "function") setCartCountUI();
+        if (typeof renderCheckoutIfPresent === "function") renderCheckoutIfPresent();
+      });
+    }
+
+    // Checkout: popup grafico (come Contatti)
+    const checkoutBtn = document.getElementById("checkoutBtn");
+    const toast = document.getElementById("toast");
+    const okBtn = document.getElementById("toastOk");
+
+    function openToast(){
+      if (!toast || !okBtn) return;
+      toast.classList.add("is-show");
+      okBtn.focus();
+    }
+
+    function closeToast(){
+      if (!toast) return;
+      toast.classList.remove("is-show");
+    }
+
+    if (checkoutBtn) checkoutBtn.addEventListener("click", openToast);
+    if (okBtn) okBtn.addEventListener("click", closeToast);
+
+    if (toast){
+      toast.addEventListener("click", (e) => { if (e.target === toast) closeToast(); });
+      document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeToast(); });
+    }
+
+    // Evidenziazione menu (UNA sola volta)
+    (function () {
+      const file = (p) => (p || "").split("/").pop().split("?")[0].split("#")[0];
+      let current = file(window.location.pathname);
+      if (!current) current = "index.html";
+
+      document.querySelectorAll("nav .nav-link").forEach((a) => {
+        const hrefFile = file(a.getAttribute("href"));
+        if (!hrefFile || hrefFile.startsWith("#")) return;
+        a.classList.toggle("is-active", hrefFile === current);
+      });
+    })();
+  </script>
+
+  <script src="assets/js/i18n.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="apple-touch-icon" href="favicon.png">
+
+  <title>Contatti — The House of Perfume</title>
+  <meta name="description" content="Contatta The House of Perfume." />
+  <link rel="stylesheet" href="assets/css/style.css" />
+
+  <!-- ✅ Carrello -->
+  <script src="assets/js/cart.js" defer></script>
+
+  <!-- Language switch minimal styling (coerente con index) -->
+  <style>
+    .lang-switch{
+      display:flex;
+      gap:8px;
+      align-items:center;
+      justify-content:flex-end;
+      margin-left:14px;
+    }
+    .lang-btn{
+      border:1px solid rgba(255,255,255,.18);
+      background:transparent;
+      color:inherit;
+      padding:8px 10px;
+      border-radius:999px;
+      cursor:pointer;
+      font-size:12px;
+      letter-spacing:.08em;
+      line-height:1;
+      opacity:.85;
+    }
+    .lang-btn.is-active{
+      border-color: rgba(191,163,106,.9);
+      opacity:1;
+    }
+    @media (max-width: 880px){
+      .lang-switch{ justify-content:flex-start; margin-left:0; margin-top:10px; }
+    }
+  </style>
+
+<style>
+  /* Popup conferma invio (centrato e compatto) */
+  #toast{
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+
+    z-index: 99999;
+
+    background: rgba(18,20,28,.98);
+    border: 1px solid rgba(255,255,255,.14);
+    border-radius: 16px;
+    box-shadow: 0 20px 50px rgba(0,0,0,.55);
+
+    width: 260px;                 /* più piccolo */
+    padding: 12px 14px;
+
+    height: auto;                 /* IMPORTANTISSIMO: niente altezza gigante */
+    min-height: 0;
+    max-height: none;
+
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .25s ease;
+  }
+
+  #toast.is-show{
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  #toast .toast-inner{
+    margin: 0;
+    padding: 0;
+  }
+
+  #toast #toastTitle{
+    display: block;
+    margin: 0 0 6px;
+    font-size: 14px;
+    line-height: 1.2;
+    font-weight: 800;
+    color: var(--text);
+  }
+
+  #toast #toastText{
+    display: block;
+    margin: 0 0 10px;
+    font-size: 13px;
+    line-height: 1.35;
+    color: var(--muted);
+  }
+
+  #toast .toast-actions{
+    margin-top: 4px;
+  }
+
+  #toast .toast-actions .btn{
+    padding: 8px 14px;            /* bottone compatto */
+  }
+</style>
+
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="index.html" aria-label="The House of Perfume">
+        <span class="brand-mark">THP</span>
+        <span class="brand-name">The House of Perfume</span>
+      </a>
+
+      <nav class="nav">
+        <a href="index.html" class="nav-link"><span data-i18n="nav_home">Home</span></a>
+        <a href="chi-siamo.html" class="nav-link"><span data-i18n="nav_about">Chi Siamo</span></a>
+        <a href="profumi.html" class="nav-link"><span data-i18n="nav_perfumes">Profumi</span></a>
+        <a href="faq.html" class="nav-link"><span data-i18n="nav_faq">FAQ</span></a>
+        <a href="contatti.html" class="nav-link"><span data-i18n="nav_contacts">Contatti</span></a>
+        <a href="login.html" class="nav-link"><span data-i18n="nav_login">Login</span></a>
+
+        <a href="checkout.html" class="nav-link nav-cta" id="navCartLink">
+          <span data-i18n="nav_cart">Carrello</span><span id="cartCount"></span>
+        </a>
+      </nav>
+
+      <!-- Switch lingua -->
+      <div class="lang-switch" aria-label="Selettore lingua">
+        <button type="button" class="lang-btn" data-lang="it">IT</button>
+        <button type="button" class="lang-btn" data-lang="fr">FR</button>
+        <button type="button" class="lang-btn" data-lang="de">DE</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 data-i18n="contacts_title">Contatti</h2>
+        <p data-i18n="contacts_sub">Scrivici per informazioni, disponibilità, consigli sulle fragranze o assistenza.</p>
+      </div>
+
+      <div class="split">
+        <div class="panel">
+          <h3 data-i18n="contacts_form_title">Invia un messaggio</h3>
+          <p class="lead" style="margin:8px 0 12px; font-size:1rem;" data-i18n="contacts_form_note">
+            Il modulo è in preparazione. Per ora puoi contattarci direttamente via email.
+          </p>
+
+          <!-- ✅ Questo è IL form che userà il popup -->
+          <form id="contactForm">
+            <label style="display:block; margin:10px 0 6px; color: var(--muted);" data-i18n="contacts_name_label">Nome</label>
+            <input id="nome" name="nome" type="text" placeholder="Il tuo nome" required
+              data-i18n="contacts_name_ph"
+              style="width:100%; padding:12px; border-radius:12px; border:1px solid rgba(255,255,255,.12); background:rgba(255,255,255,.04); color:var(--text);" />
+
+            <label style="display:block; margin:10px 0 6px; color: var(--muted);" data-i18n="contacts_surname_label">Cognome</label>
+            <input id="cognome" name="cognome" type="text" placeholder="Il tuo cognome" required
+              data-i18n="contacts_surname_ph"
+              style="width:100%; padding:12px; border-radius:12px; border:1px solid rgba(255,255,255,.12); background:rgba(255,255,255,.04); color:var(--text);" />
+
+            <label style="display:block; margin:10px 0 6px; color: var(--muted);" data-i18n="contacts_email_label">Email</label>
+            <input id="email" name="email" type="email" placeholder="nome@email.com" required
+              data-i18n="contacts_email_ph"
+              style="width:100%; padding:12px; border-radius:12px; border:1px solid rgba(255,255,255,.12); background:rgba(255,255,255,.04); color:var(--text);" />
+
+            <label style="display:block; margin:10px 0 6px; color: var(--muted);" data-i18n="contacts_message_label">Messaggio</label>
+            <textarea id="messaggio" name="messaggio" rows="5" placeholder="Scrivi qui..." required
+              data-i18n="contacts_message_ph"
+              style="width:100%; padding:12px; border-radius:12px; border:1px solid rgba(255,255,255,.12); background:rgba(255,255,255,.04); color:var(--text);"></textarea>
+
+            <div style="margin-top:12px;">
+              <!-- ✅ Deve essere submit -->
+              <button type="submit" class="btn btn-primary" data-i18n="contacts_send_btn">Invia</button>
+            </div>
+          </form>
+        </div>
+
+        <aside class="panel">
+          <h3 data-i18n="contacts_info_title">Informazioni</h3>
+          <ul class="list">
+            <li><strong data-i18n="contacts_info_email_label">Email:</strong> thehouseofperfume@protonmail.com</li>
+            <li><strong data-i18n="contacts_info_company_label">Ragione Sociale:</strong> Floty Delta S.r.l</li>
+            <li><strong data-i18n="contacts_info_address_label">Sede Legale:</strong> Strada Barbu Mumuleanu 27, 020543 Sectorul 2, București</li>
+            <li><strong data-i18n="contacts_info_vat_label">P. Iva:</strong> RO51679713</li>
+          </ul>
+        </aside>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-inner">
+      <div class="footer-brand">
+        <div class="brand-mark sm">THP</div>
+        <div>
+          <a class="footer-title footer-home" href="index.html">The House of Perfume</a>
+          <div class="footer-sub" data-i18n="footer_sub">Profumeria artistica</div>
+        </div>
+      </div>
+
+      <div class="footer-social">
+        <a href="social.html" aria-label="Instagram">
+          <img src="assets/img/icons/instagram.png" alt="Instagram" class="footer-icon">
+        </a>
+        <a href="social.html" aria-label="Facebook">
+          <img src="assets/img/icons/facebook.png" alt="Facebook" class="footer-icon">
+        </a>
+        <a href="social.html" aria-label="TikTok">
+          <img src="assets/img/icons/tiktok.png" alt="TikTok" class="footer-icon">
+        </a>
+      </div>
+
+      <div class="footer-payments" aria-label="Metodi di pagamento">
+        <span class="pay-badge">
+          <img src="assets/img/icons/paypal.png" alt="PayPal" class="footer-icon">
+        </span>
+        <span class="pay-badge">
+          <img src="assets/img/icons/visa.png" alt="Visa" class="footer-icon">
+        </span>
+        <span class="pay-badge">
+          <img src="assets/img/icons/mastercard.png" alt="Mastercard" class="footer-icon">
+        </span>
+        <span class="pay-badge">
+          <img src="assets/img/icons/bonifico.png" alt="Bonifico" class="footer-icon">
+        </span>
+      </div>
+
+      <div class="footer-note">
+        © <span id="year"></span> The House of Perfume. <span data-i18n="footer_rights">Tutti i diritti riservati.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // anno footer
+    const y = document.getElementById("year");
+    if (y) y.textContent = String(new Date().getFullYear());
+  </script>
+
+  <script>
+    // evidenziazione menu (UNA sola volta)
+    (function () {
+      const file = (p) => (p || "").split("/").pop().split("?")[0].split("#")[0];
+      let current = file(window.location.pathname);
+      if (!current) current = "index.html";
+
+      document.querySelectorAll("nav .nav-link").forEach((a) => {
+        const hrefFile = file(a.getAttribute("href"));
+        if (!hrefFile || hrefFile.startsWith("#")) return;
+        a.classList.toggle("is-active", hrefFile === current);
+      });
+    })();
+  </script>
+
+  <!-- ✅ Popup (UNICO) -->
+  <div id="toast" role="dialog" aria-modal="true" aria-labelledby="toastTitle" aria-describedby="toastText">
+    <div class="toast-inner">
+      <strong id="toastTitle" data-i18n="toast_title">Messaggio inviato</strong>
+      <span id="toastText" data-i18n="toast_text">Ti risponderemo il prima possibile.</span>
+
+      <div class="toast-actions">
+        <button id="toastOk" type="button" class="btn btn-primary" data-i18n="toast_ok">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ✅ Popup finto: appare SOLO se i campi sono compilati, resta finché clicchi OK
+    (function () {
+      const toast = document.getElementById("toast");
+      const okBtn = document.getElementById("toastOk");
+      const form = document.getElementById("contactForm");
+      if (!toast || !okBtn || !form) return;
+
+      function openToast() {
+        toast.classList.add("is-show");
+        okBtn.focus();
+      }
+
+      function closeToast() {
+        toast.classList.remove("is-show");
+      }
+
+      form.addEventListener("submit", (e) => {
+        e.preventDefault(); // conferma finta (non invia nulla)
+
+        // Validazione credibile: se manca qualcosa, mostra i messaggi del browser
+        if (!form.checkValidity()) {
+          form.reportValidity();
+          return;
+        }
+
+        form.reset();
+        openToast();
+      });
+
+      okBtn.addEventListener("click", closeToast);
+
+      // chiudi cliccando fuori dal box (sullo sfondo scuro)
+      toast.addEventListener("click", (e) => {
+        if (e.target === toast) closeToast();
+      });
+
+      // chiudi con ESC
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") closeToast();
+      });
+    })();
+  </script>
+
+  <script src="assets/js/i18n.js"></script>
+</body>
+</html>
